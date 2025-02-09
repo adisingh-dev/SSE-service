@@ -27,12 +27,9 @@ app.post('/events', (req, res) => {
     const workload = setInterval(() => {
         if(counter > 5) {
             clearInterval(workload);
-            clients[0].res.write('event: close\n'); 
             clients[0].res.write('data: SSE service closed\n\n');
+            clients[0].res.write('event: close\n'); 
             clients[0].res.on('close', () => {
-                clients[0].res.end();
-            });
-            clients[0].req.on('close', () => {
                 clients[0].res.end();
             });
             return res.status(200).json({
@@ -49,5 +46,5 @@ app.post('/events', (req, res) => {
 });
 
 app.listen(4000, () => {
-    console.log('server running @3000');
+    console.log('server running @4000');
 });
