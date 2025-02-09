@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE Service</title>
+</head>
+<body>
+    <h1>SSE Listener</h1>
+    <button id="btn">Fire Events</button>
+    <ul id="eventlist"></ul>
+</body>
+</html>
+
+<script src="./axios.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    const ul = document.getElementById('eventlist');
+
+    window.addEventListener('beforeunload', () => {
+            console.log('beforeunload');
+        });
+
+    document.getElementById('btn')
+    .addEventListener('click', async () => {
+        const eventsrc = new EventSource('/events');
+
+        eventsrc.onmessage = (event) => {
+            let li = document.createElement('li');
+            li.textContent = event.data;
+            ul.appendChild(li);
+        }
+        eventsrc.addEventListener('close', () => {
+            console.log(7788);
+            eventsrc.close();
+        });
+        eventsrc.onerror = (err) => {
+            console.log(err);
+            eventsrc.close();
+        };
+
+        try {
+            const res = await axios.post('/events', {
+                name: "Richard Paul",
+                designation: "UX Designer"
+            });
+            console.log(res.data);
+            
+        } catch (error) {
+            console.log(error);
+        }
+    });
+
+</script>
